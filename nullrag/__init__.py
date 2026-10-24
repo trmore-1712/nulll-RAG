@@ -1,5 +1,5 @@
 """
-NullRAG Package
+nullRAG Package
 ===============
 Hierarchical Multimodal RAG for Financial Document Understanding.
 """

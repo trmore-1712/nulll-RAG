@@ -1,8 +1,8 @@
-# HierFinRAG — Hierarchical Multimodal RAG for Financial Document Understanding
+# nullRAG — Hierarchical Multimodal RAG for Financial Document Understanding
 
 > **Treat financial reports as structured evidence networks, not flat text.**
 
-HierFinRAG is a specialised Retrieval-Augmented Generation framework built for complex financial documents — 10-Ks, Annual Reports, credit disclosures — where the evidence needed to answer a question is distributed across narrative sections, tables, footnotes and different reporting periods.
+nullRAG is a specialised Retrieval-Augmented Generation framework built for complex financial documents — 10-Ks, Annual Reports, credit disclosures — where the evidence needed to answer a question is distributed across narrative sections, tables, footnotes and different reporting periods.
 
 ---
 
@@ -36,20 +36,20 @@ PDF / ZIP
 +-------------------------------+
 |  Stage 1 · Hierarchical       |
 |  Ingestion & Parsing          |  PyMuPDF -> Sections, Paragraphs,
-|  (hierfinrag/parsing)         |  Tables, Cells + stable Evidence IDs
+|  (nullrag/parsing)            |  Tables, Cells + stable Evidence IDs
 +---------------+---------------+
                 |
                 v
 +-------------------------------+
 |  Stage 2 · Structural         |
 |  Evidence Graph (SEG)         |  Nodes: Doc / Section / Chunk / Table / Cell / Note
-|  (hierfinrag/graph)           |  Edges: parent-child, sequential, cross-ref, semantic
+|  (nullrag/graph)              |  Edges: parent-child, sequential, cross-ref, semantic
 +---------------+---------------+
                 |
                 v
 +-------------------------------+
 |  Stage 3 · Hybrid Retrieval   |  FAISS dense (semantic)
-|  (hierfinrag/retrieval)       |  + BM25 sparse (lexical)
+|  (nullrag/retrieval)          |  + BM25 sparse (lexical)
 |                               |  -> Reciprocal Rank Fusion (RRF)
 +---------------+---------------+
                 |
@@ -57,14 +57,14 @@ PDF / ZIP
 +-------------------------------+
 |  Stage 4 · Adaptive Query     |  Targeted mode  (precise metric lookup)
 |  Routing                      |  Synthesis mode (multi-section evidence)
-|  (hierfinrag/routing)         |
+|  (nullrag/routing)            |
 +---------------+---------------+
                 |
                 v
 +-------------------------------+
 |  Stage 5 · Obligation-Aware   |  Decomposes query into required facts
 |  Evidence Ledger              |  Selects complementary evidence; follows
-|  (hierfinrag/evidence)        |  graph cross-references to recover missing data
+|  (nullrag/evidence)           |  graph cross-references to recover missing data
 +---------------+---------------+
                 |
                 v
@@ -247,7 +247,7 @@ The graph-based evidence recovery targets **context recall** (finding what simil
 ## Project Structure
 
 ```
-NullRAG/
+nullRAG/
 ├── server.py                    # FastAPI server (POST /index, POST /query)
 ├── config.py                    # API keys and Langfuse config
 ├── requirements.txt             # Python dependencies
@@ -256,10 +256,11 @@ NullRAG/
 ├── run_api_benchmark_eval.py    # API-based benchmark evaluation
 ├── run_opencode_judge.py        # LLM-as-judge evaluation
 │
+├── nullrag/                     # Top-level nullRAG package namespace
 ├── hierfinrag/                  # Core pipeline modules
 │   ├── parsing/                 # PDF ingestion, hierarchy extraction
 │   ├── graph/                   # Structural Evidence Graph (SEG)
-│   ├── index/                   # FAISS + BM25 indexing
+│   ├── index/                   # FAISS + BM25 indexing & collection store
 │   ├── retrieval/               # Hybrid retrieval, RRF fusion
 │   ├── routing/                 # Adaptive query router
 │   ├── intent/                  # Query intent classification
@@ -269,7 +270,6 @@ NullRAG/
 │   ├── evaluation/              # Metric computation
 │   └── observability/           # Langfuse tracing
 │
-├── nullrag/                     # Engine and collection store
 ├── tests/                       # Unit and integration tests
 └── results/                     # Benchmark output logs
 ```
